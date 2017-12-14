@@ -27,7 +27,7 @@ void    strPrintTime(char* des, time_t& t) {
     strftime(des, 26, "%Y-%m-%d %H:%M:%S", pTime);
 }
 
-void loadVMDB(char* fName, L1List<VM_Record_t> &db) {
+void loadVMDB(char* fName, L1List<VM_Record> &db) {
     ifstream dbFile(fName);
     if(dbFile.fail()){
         cout << "The file i not fount!";
@@ -37,22 +37,37 @@ void loadVMDB(char* fName, L1List<VM_Record_t> &db) {
     getline(dbFile, tempString);
     while(getline(dbFile, tempString,',')){
         if(!tempString.empty()){
-            VM_Record_t *newNode = new VM_Record_t(); 
+            VM_Record newNode;
             // read time
             getline(dbFile, tempString,',');
             struct tm tm;
             strptime(tempString.c_str(), "%m/%d/%Y %H:%M:%S" , &tm);
-            newNode->timestamp = timegm(&tm);
+            newNode.timestamp = timegm(&tm);
             //read id
             getline(dbFile, tempString,',');
-            strncpy(newNode->id, tempString.c_str(), ID_MAX_LENGTH - 1);            
+            strncpy(newNode.id, tempString.c_str(), ID_MAX_LENGTH - 1);            
             //read longitude
             getline(dbFile, tempString,',');
-            newNode->longitude = stod(tempString);            
+            newNode.longitude = stod(tempString);            
             //read latitude
             getline(dbFile, tempString,',');
-            newNode->latitude = stod(tempString);
-            db.push_back(*newNode);
+            newNode.latitude = stod(tempString);
+            if(!db.getSize()){
+                db.push_back(newNode);
+            } else {
+                L1Item<VM_Record> *temp = db.getHead();
+                while(temp){
+                    if(!strcmp(temp->data.id,newNode.id)){
+                        temp->treeAVL.insert(newNode);
+                        break;
+                    }
+                    temp=temp->pNext;
+                }
+                if(!temp){
+                    db.push_back(newNode);
+                }
+            }
+
             
         }
         getline(dbFile,tempString);

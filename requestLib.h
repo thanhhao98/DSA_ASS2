@@ -59,7 +59,7 @@ typedef struct VM_Request {
     bool operator==(VM_Request &a) {
         return strcmp(code, a.code) == 0;
     }
-} VM_Request_t;
+}VM_Request_t;
 
 void loadRequests(char* fName, L1List<VM_Request> &);
 

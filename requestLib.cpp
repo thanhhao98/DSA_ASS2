@@ -12,7 +12,7 @@
 #include "requestLib.h"
 
 
-void loadRequests(char* fName, L1List<VM_Request_t> &rList) {
+void loadRequests(char* fName, L1List<VM_Request> &rList) {
     ifstream reqFile(fName);
     if(reqFile.fail()){
       cout << "The file i not fount!";
@@ -25,7 +25,7 @@ void loadRequests(char* fName, L1List<VM_Request_t> &rList) {
         stringstream streamLine(tempString);
         while(streamLine>>requestCode){
           if(!requestCode.empty()){
-            VM_Request_t *newRequest = new VM_Request_t(requestCode);
+            VM_Request *newRequest = new VM_Request(requestCode);
             int i=0;
             while(newRequest->code[i]!='\0'){
               if(newRequest->code[i]==';' && newRequest->code[i+1]=='\0'){

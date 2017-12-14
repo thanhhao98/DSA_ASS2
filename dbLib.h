@@ -41,7 +41,22 @@ typedef struct VM_Record {
     VM_Record(VM_Record& bus) : timestamp(bus.timestamp), longitude(bus.longitude), latitude(bus.latitude) {
         strcpy(id, bus.id);
     }
-} VM_Record_t;
+    inline bool operator==(VM_Record a){
+        return (int)this->timestamp == (int)a.timestamp;
+    }
+    inline bool operator<(VM_Record a){
+        return (int)this->timestamp < (int)a.timestamp;
+    }
+    inline bool operator>(VM_Record a){
+        return (int)this->timestamp > (int)a.timestamp;
+    }
+    inline bool operator<=(VM_Record a){
+        return *this==a||*this<a;
+    }
+    inline bool operator>=(VM_Record a){
+        return *this==a||*this>a;
+    }
+}VM_Record_t;
 
 void    printVMRecord(VM_Record &);
 void    strPrintTime(char* des, time_t& t);
