@@ -52,27 +52,27 @@ void loadVMDB(char* fName, L1List<VM_Record> &db) {
             //read latitude
             getline(dbFile, tempString,',');
             newNode.latitude = stod(tempString);
-            if(!db.getSize()){
-                db.push_back(newNode);
-            } else {
-                L1Item<VM_Record> *temp = db.getHead();
-                while(temp){
-                    if(!strcmp(temp->data.id,newNode.id)){
-                        temp->treeAVL.insert(newNode);
-                        break;
-                    }
-                    temp=temp->pNext;
+            L1Item<VM_Record> *temp = db.getHead();
+            while(temp){
+                if(!strcmp(temp->data.id,newNode.id)){
+                    temp->treeAVL.insert(newNode);
+                    temp->maxLongLa[0] = (temp->maxLongLa[0]<newNode.longitude)? newNode.longitude:temp->maxLongLa[0];
+                    temp->minLongLa[0] = (temp->minLongLa[0]>newNode.longitude)? newNode.longitude:temp->minLongLa[0];
+                    temp->maxLongLa[1] = (temp->maxLongLa[1]<newNode.latitude)? newNode.latitude:temp->maxLongLa[1];
+                    temp->minLongLa[1] = (temp->minLongLa[1]>newNode.latitude)? newNode.latitude:temp->minLongLa[1];
+                    break;
                 }
-                if(!temp){
-                    db.push_back(newNode);
-                }
+                temp=temp->pNext;
             }
-
-            
+            if(!temp){
+                db.insertHead(newNode);
+                db.getTail()->treeAVL.insert(newNode);
+                db.getTail()->maxLongLa[0] = db.getTail()->minLongLa[0] = newNode.longitude;
+                db.getTail()->maxLongLa[1] = db.getTail()->minLongLa[1] = newNode.latitude;
+            }       
         }
         getline(dbFile,tempString);
     }
-
     dbFile.close();
 }
 

@@ -330,6 +330,8 @@ struct L1Item {
     T data;
     L1Item<T> *pNext;
     AVLTree<T> treeAVL;
+    double maxLongLa[2];
+    double minLongLa[2];
     L1Item() : pNext(NULL) {}
     L1Item(T &a) : data(a), pNext(NULL) {}
 };
@@ -341,7 +343,9 @@ class L1List {
     size_t      _size;// number of elements in this list
 public:
     L1List() : _pTail(NULL), _pHead(NULL), _size(0) {}
-    ~L1List(){}
+    ~L1List(){
+        release(this->_pHead);
+    }
 
     L1Item<T> *getHead(){return _pHead;}
     L1Item<T> *getTail(){return _pTail;}
@@ -352,6 +356,19 @@ public:
     }
     size_t  getSize() {
         return _size;
+    }
+
+    void release(L1Item<T>* &tempNode){
+        if(!tempNode) {
+            return ;
+        } else if(!tempNode->pNext){
+            delete tempNode->pNext;
+            return;
+        } else {
+            release(tempNode->pNext);
+            delete tempNode->pNext;
+            return;
+        }
     }
 
     T&      at(int i);
