@@ -437,14 +437,13 @@ int L1List<T>::insertHead(T &a) {
 /// Return 0 if success
 template <class T>
 int L1List<T>::removeHead() {
-    if(_pHead!=_pTail) {
-        L1Item<T> *temp = _pHead;
+    if(_size>0) {
         _pHead = _pHead->pNext;
-        delete temp;
         _size--;
         return 0;
     }
     _pHead = _pTail = NULL;
+    _size = 0;
     return -1;
 }
 
@@ -477,10 +476,25 @@ void makeList(AVLNode<T> *pR, L1List<T> &list){
     return;
 }
 
+template <class T>
+bool makeListInSize(AVLNode<T> *pR, L1List<T>  &list, T minNode, T maxNode){
+    if(!pR) return false;
+    if(pR->data<minNode) return makeListInSize(pR->_pRight,list,minNode,maxNode);
+    if(pR->data>maxNode) return makeListInSize(pR->_pLeft,list,minNode,maxNode);
+    makeListInSize(pR->_pLeft,list,minNode,maxNode);
+    list.push_back(pR->data);
+    makeListInSize(pR->_pRight,list,minNode,maxNode);
+    return true;
+}
 
 template <class T>
 void makeList(AVLTree<T> myAVL ,L1List<T> &list){
     makeList(myAVL.getRoot(),list);
+}
+
+template <class T>
+bool makeListInSize(AVLTree<T> myAVL, L1List<T> &list, T minNode, T maxNode){
+    return makeListInSize(myAVL.getRoot(),list,minNode,maxNode);
 }
 
 #endif //A02_DSALIB_H
