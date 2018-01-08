@@ -41,11 +41,11 @@ void loadVMDB(char* fName, L1List<VM_Record> &db) {
             // read time
             getline(dbFile, tempString,',');
             struct tm tm;
-            strptime(tempString.c_str(), "%m/%d/%Y %H:%M:%S" , &tm);
+            strptime(tempString.data(), "%m/%d/%Y %H:%M:%S" , &tm);
             newNode.timestamp = timegm(&tm);
             //read id
             getline(dbFile, tempString,',');
-            strncpy(newNode.id, tempString.c_str(), ID_MAX_LENGTH - 1);            
+            strncpy(newNode.id, tempString.data(), ID_MAX_LENGTH - 1);            
             //read longitude
             getline(dbFile, tempString,',');
             newNode.longitude = stod(tempString);            
