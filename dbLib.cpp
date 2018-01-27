@@ -78,6 +78,7 @@ void loadVMDB(char* fName, L1List<VM_Record> &db) {
 }
 
 bool parseVMRecord(char *pBuf, VM_Record &bInfo) {
+    return false;
     // TODO: write code to parse a record from given line
 }
 

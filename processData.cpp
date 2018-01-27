@@ -127,6 +127,51 @@ void funRequest3(int key , double Ala, L1List<VM_Record> recordList){
     cout << num << endl;
 }
 
+void funRequest4(double* coordinateLongLati, double r, VM_Record *timeRecord, L1List<VM_Record> recordList){
+    int countVM = 0;
+    L1Item<VM_Record> *temp = recordList.getHead();
+    while(temp){
+        L1List<VM_Record> newList;
+        makeListInSize(temp->treeAVL,newList,timeRecord[0],timeRecord[1]);
+        if(newList.getSize()){
+            L1Item<VM_Record> *subTemp = newList.getHead();
+            while(subTemp){
+                if(distanceEarth(coordinateLongLati[1],coordinateLongLati[0],subTemp->data.latitude,subTemp->data.longitude)<r){
+                    countVM++;
+                    break;
+                }
+                subTemp = subTemp->pNext;
+            }
+        }
+        temp = temp->pNext;
+    }
+    cout << countVM << endl;
+}
+
+void funRequest5(double r, VM_Record dataRecord, L1List<VM_Record> recordList){
+    // not exist VM with id ?
+    L1Item<VM_Record> *temp = recordList.getHead();
+    while(temp){
+        if(!strcmp(dataRecord.id,temp->data.id)){
+            L1List<VM_Record> newList;
+            makeList(temp->treeAVL,newList);
+            L1Item<VM_Record> *subTemp = newList.getHead();
+            while(subTemp){
+                // how to count time move into and go out ??
+                // TODO
+
+
+                subTemp = subTemp->pNext;
+            }
+
+            break;
+        }
+        temp = temp->pNext;
+    }
+
+
+}
+
 bool processRequest(VM_Request &request, L1List<VM_Record> &recordList, void *pGData) {
     int checkCase = checkRequest(request);
     if(!checkCase) return false;
@@ -214,6 +259,8 @@ bool processRequest(VM_Request &request, L1List<VM_Record> &recordList, void *pG
 
         }
         case 4:{
+            // TOTO
+            // seprate the parameter
 
         }
         case 5:{
